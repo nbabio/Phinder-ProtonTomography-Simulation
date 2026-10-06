@@ -59,18 +59,18 @@ ConfigurationGeometry::ConfigurationGeometry(G4String file) {
         uniSizeZ = zSize * CLHEP::cm;
 
         //Definition of the beam---------------------------------------
-        xBeamPosition = atof(root["theBeam"]["xBeamPosition"].asString().c_str());
-        xBeamSigma = atof(root["theBeam"]["xBeamSigma"].asString().c_str());
-        yBeamPosition = atof(root["theBeam"]["yBeamPosition"].asString().c_str());
-        yBeamSigma = atof(root["theBeam"]["yBeamSigma"].asString().c_str());    
-        zBeamPosition = atof(root["theBeam"]["zBeamPosition"].asString().c_str());
+        xBeamPosition = atof(root["theBeam"]["xBeamPosition"].asString().c_str()) * CLHEP::cm;
+        xBeamSigma = atof(root["theBeam"]["xBeamSigma"].asString().c_str()) * CLHEP::cm;
+        yBeamPosition = atof(root["theBeam"]["yBeamPosition"].asString().c_str()) * CLHEP::cm;
+        yBeamSigma = atof(root["theBeam"]["yBeamSigma"].asString().c_str()) * CLHEP::cm;    
+        zBeamPosition = atof(root["theBeam"]["zBeamPosition"].asString().c_str()) * CLHEP::cm;
         xBeamDir = atof(root["theBeam"]["xDir"].asString().c_str()) * CLHEP::degree;
         yBeamDir = atof(root["theBeam"]["yDir"].asString().c_str()) * CLHEP::degree;
         zBeamDir = atof(root["theBeam"]["zDir"].asString().c_str()) * CLHEP::degree;
-        energy = atof(root["theBeam"]["energy"].asString().c_str());
-        energySigma = atof(root["theBeam"]["energySigma"].asString().c_str());
-        tBeamSigma = atof(root["theBeam"]["tBeamSigma"].asString().c_str());
-        maxOpenAngle = atof(root["theBeam"]["maxOpenAngle"].asString().c_str());
+        energy = atof(root["theBeam"]["energy"].asString().c_str()) * CLHEP::MeV;
+        energySigma = atof(root["theBeam"]["energySigma"].asString().c_str()) * CLHEP::MeV;
+        tBeamSigma = atof(root["theBeam"]["tBeamSigma"].asString().c_str()) * CLHEP::ns;
+        maxOpenAngle = atof(root["theBeam"]["maxOpenAngle"].asString().c_str()) * CLHEP::degree;
         nParticles = atoi(root["theBeam"]["nParticles"].asString().c_str());
         nStep = atoi(root["theBeam"]["nStep"].asString().c_str());
         if(root["theBeam"]["particleDistribution"].asString().find("Poisson") != -1) {
@@ -443,7 +443,6 @@ void ConfigurationGeometry::createG4objects(G4LogicalVolume *mother,
     rot.rotateX(xBeamDir);
     G4ThreeVector newpos = rot * pos;
 
-    G4cout << "Mierda " << newpos << G4endl; 
     coneVolume = new G4Cons("gantry", 0.5*CLHEP::cm, 1.0*CLHEP::cm, 3.0*CLHEP::cm, 3.5*CLHEP::cm, 5.0*CLHEP::cm, 0.0, 2.0*3.14159287);
     conelogicalVolume = new G4LogicalVolume(coneVolume, materials["steel"], "gantrylogical");
     conePhysical = new G4PVPlacement(&rot, newpos, conelogicalVolume, "gantryphysical", mother, false, 0, true);
@@ -459,7 +458,7 @@ void ConfigurationGeometry::createG4objects(G4LogicalVolume *mother,
 
 
     for(int i = 0; i < phantoms.size(); i++) { 
-	phantoms[i]->createG4Objects(mother, materials, SDman);
+	    phantoms[i]->createG4Objects(mother, materials, SDman);
     }
 
 }
