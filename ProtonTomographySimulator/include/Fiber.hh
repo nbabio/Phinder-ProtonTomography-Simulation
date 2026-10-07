@@ -13,7 +13,7 @@ public:
          G4double, G4double, G4double, 
          G4double, G4double, G4double,
 	     G4int, G4int, G4int,
-         G4double, G4double, G4double, G4double,
+         G4double, G4double, G4double,
          G4String, G4String);
          
 
@@ -26,8 +26,6 @@ public:
     G4double getCoreRadius();
 
     G4double getCladdingRadius();
-
-    G4double getOuterRadius();
 
     G4String getCoreMaterial();
 
@@ -42,7 +40,7 @@ public:
 
 private:
     G4int ndetId, nlayerId, nfiberId;
-    G4double coreRad, claddingRad, outerRad;
+    G4double coreRad, claddingRad;
     G4double length;
     G4String coreMaterial, claddingMaterial;
     G4LogicalVolume *logicalVolumeCore, *logicalVolumeCladding;

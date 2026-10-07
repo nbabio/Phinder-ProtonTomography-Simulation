@@ -156,7 +156,6 @@ ConfigurationGeometry::ConfigurationGeometry(G4String file) {
                     G4double zSensSize = atof(root["Detectors"][idet]["Layers"][icoll]["Fibers"][isens]["zSizeSensor"].asString().c_str()) * CLHEP::cm;
                     G4double coreRad = atof(root["Detectors"][idet]["Layers"][icoll]["Fibers"][isens]["coreRadius"].asString().c_str()) * CLHEP::cm;
                     G4double claddingRad = atof(root["Detectors"][idet]["Layers"][icoll]["Fibers"][isens]["claddingRadius"].asString().c_str()) * CLHEP::cm;
-                    G4double outerRad = atof(root["Detectors"][idet]["Layers"][icoll]["Fibers"][isens]["outerRadius"].asString().c_str()) * CLHEP::cm;
                     G4double length = atof(root["Detectors"][idet]["Layers"][icoll]["Fibers"][isens]["length"].asString().c_str()) * CLHEP::cm;
                     G4String coreMaterial = root["Detectors"][idet]["Layers"][icoll]["Fibers"][isens]["coreMaterial"].asString().c_str();
                     G4String claddingMaterial = root["Detectors"][idet]["Layers"][icoll]["Fibers"][isens]["claddingMaterial"].asString().c_str();
@@ -165,7 +164,7 @@ ConfigurationGeometry::ConfigurationGeometry(G4String file) {
                                              xSensDir, ySensDir, zSensDir,
                                              xSensSize, ySensSize, zSensSize,
                                              idet, icoll, isens,
-                                             coreRad, claddingRad, outerRad, length,
+                                             coreRad, claddingRad, length,
                                             coreMaterial, claddingMaterial);
                     layer->AddSensor(fiber);
                     G4String label = G4String(std::to_string(idet)) + G4String("_") + 
@@ -438,14 +437,14 @@ void ConfigurationGeometry::createG4objects(G4LogicalVolume *mother,
     pos.setX(0);
     pos.setY(0);
     pos.setZ(GetZBeamPosition());
-    G4RotationMatrix rot;
-    rot.rotateY(yBeamDir);
-    rot.rotateX(xBeamDir);
-    G4ThreeVector newpos = rot * pos;
+    G4RotationMatrix *rot = new G4RotationMatrix();
+    rot->rotateY(yBeamDir);
+    rot->rotateX(xBeamDir);
+    G4ThreeVector newpos = *rot * pos;
 
     coneVolume = new G4Cons("gantry", 0.5*CLHEP::cm, 1.0*CLHEP::cm, 3.0*CLHEP::cm, 3.5*CLHEP::cm, 5.0*CLHEP::cm, 0.0, 2.0*3.14159287);
     conelogicalVolume = new G4LogicalVolume(coneVolume, materials["steel"], "gantrylogical");
-    conePhysical = new G4PVPlacement(&rot, newpos, conelogicalVolume, "gantryphysical", mother, false, 0, true);
+    conePhysical = new G4PVPlacement(rot, newpos, conelogicalVolume, "gantryphysical", mother, false, 0, true);
 
     G4Colour silicon(238.0/256.0, 162.0/256.0, 11.0/256.0);
     G4VisAttributes *attlog = new G4VisAttributes(silicon);

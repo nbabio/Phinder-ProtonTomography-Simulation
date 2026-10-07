@@ -92,7 +92,7 @@ if __name__=='__main__':
             for j in range(NFibers):
                 xfiber = -theLayer['xSizeLayer']/2.0 + j * step
                 yfiber = 0.0
-                zfiber = theLayer['zPosLayer']
+                zfiber = 0.0
                 theFiber = copy.copy(fiber)
                 theFiber['xPosSensor'] = xfiber
                 theFiber['yPosSensor'] = yfiber
@@ -104,8 +104,7 @@ if __name__=='__main__':
                 theFiber['ySizeSensor'] = FiberYsize
                 theFiber['zSizeSensor'] = FiberZsize
                 theFiber['coreRadius'] = 0.25
-                theFiber['claddingRadius'] = 0.30
-                theFiber['outerRadius'] = 0.35
+                theFiber['claddingRadius'] = 0.35
                 theFiber['length'] = FiberYsize/2.0
                 theFiber['coreMaterial'] = 'lead'
                 theFiber['claddingMaterial'] = 'lead'

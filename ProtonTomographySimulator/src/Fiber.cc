@@ -11,7 +11,7 @@ Fiber::Fiber(G4double xPos, G4double yPos, G4double zPos,
            G4double xRot, G4double yRot, G4double zRot,
            G4double xSize, G4double ySize, G4double zSize,
            G4int ndet, G4int nlayer, G4int nfiber_, 
-           G4double coreRad_, G4double claddingRad_, G4double outerRad_, G4double length_,
+           G4double coreRad_, G4double claddingRad_, G4double length_,
            G4String coreMaterial_, G4String claddingMaterial_):
            GeomObject(xPos, yPos, zPos, xRot, yRot, zRot, xSize, ySize, zSize) {
             ndetId = ndet;
@@ -19,7 +19,6 @@ Fiber::Fiber(G4double xPos, G4double yPos, G4double zPos,
             nfiberId = nfiber_;
             coreRad = coreRad_;
             claddingRad = claddingRad_;
-            outerRad = outerRad_;
             length = length_;
             coreMaterial = coreMaterial_;
             claddingMaterial = claddingMaterial_;
@@ -41,15 +40,6 @@ G4double Fiber::getCoreRadius() {
 //----------------------------------------------------------------------//
 G4double Fiber::getCladdingRadius() {
 	return claddingRad;
-}
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-
-//----------------------------------------------------------------------//
-// Return outer radius                                                  //
-//----------------------------------------------------------------------//
-G4double Fiber::getOuterRadius() {
-	return outerRad;
 }
 //----------------------------------------------------------------------//
 //----------------------------------------------------------------------//
@@ -115,7 +105,7 @@ void Fiber::createG4Objects(G4String name, G4LogicalVolume *mother,
                                        logicalVolumeCore, FiberCorePhysicalName,
                                        mother, false, 0, true);
     G4String FiberNameCladding = G4String("FiberCladding_") + name;  
-    solidVolumeCladding = new G4Tubs(FiberNameCladding, claddingRad, outerRad, length, 0.0, 2.0*CLHEP::pi);
+    solidVolumeCladding = new G4Tubs(FiberNameCladding, coreRad, claddingRad, length, 0.0, 2.0*CLHEP::pi);
     logicalVolumeCladding = new G4LogicalVolume(solidVolumeCladding, materials[claddingMaterial], FiberNameCladding);
     G4String FiberCladdingPhysicalName = G4String("FiberCladdingPhys_") + name;
     physicalVolumeCladding = new G4PVPlacement(getRot(), getPos(), 
