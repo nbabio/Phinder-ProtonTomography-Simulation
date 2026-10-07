@@ -70,4 +70,14 @@ fi
 
 
 
+if [ $HOSTNAME == "Quesada" ]; then
+    echo "Setting up environment in Quesada"
+    export G4INSTALLDIR=/home/nico/Documentos/software/geant4-v11.3.2-install/
+    export G4WORKDIR=/home/nico/Documentos/softwareProjects/Phinder-ProtonTomography/
+    export JSONCPPDIR=/home/nico/Documentos/software/jsoncpp/
+    source $G4INSTALLDIR/bin/geant4.sh
+    export PYTHONPATH=$G4WORKDIR/
+    export QT_QPA_PLATFORM=xcb
+fi
+
 
