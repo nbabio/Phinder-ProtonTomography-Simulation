@@ -24,7 +24,7 @@
 #include "G4RunManager.hh"
 
 #include "G4ios.hh"
-
+#include "G4VisAttributes.hh"
 
 #include "G4PVReplica.hh"
 
@@ -78,6 +78,11 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
     G4LogicalVolume* worldLogical = new G4LogicalVolume(worldSolid, materials["air"], "worldLogical",0,0,0);
     G4VPhysicalVolume* worldPhysical = new G4PVPlacement(0, G4ThreeVector(0, 0, 0), worldLogical, "worldPhysical", worldLogicalPrim, false, 0);
 
+    //Both worlds are drawn as wireframe so the inner volumes are visible
+    G4VisAttributes *worldVisAtt = new G4VisAttributes();
+    worldVisAtt->SetForceWireframe(true);
+    worldLogicalPrim->SetVisAttributes(worldVisAtt);
+    worldLogical->SetVisAttributes(worldVisAtt);
 
     myConf->createG4objects(worldLogical, materials, SDman);
  
