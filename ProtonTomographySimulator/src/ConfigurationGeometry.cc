@@ -434,8 +434,8 @@ void ConfigurationGeometry::createG4objects(G4LogicalVolume *mother,
 
 
     G4ThreeVector pos;
-    pos.setX(0);
-    pos.setY(0);
+    pos.setX(GetXBeamPosition());
+    pos.setY(GetYBeamPosition());
     pos.setZ(GetZBeamPosition());
     G4RotationMatrix *rot = new G4RotationMatrix();
     rot->rotateY(yBeamDir);

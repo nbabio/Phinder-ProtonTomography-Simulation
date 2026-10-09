@@ -60,9 +60,9 @@ std::vector<G4double> Beam::fireParticle() {
     G4double e = k + protonmass;
     G4double p = sqrt(e*e - protonmass*protonmass);
  
-    G4double x = myGauss->fire(myGeom->GetXBeamPosition(), myGeom->GetXBeamSigma()) * CLHEP::cm;
-    G4double y = myGauss->fire(myGeom->GetYBeamPosition(), myGeom->GetYBeamSigma()) * CLHEP::cm;
-    G4double z = myGeom->GetZBeamPosition() * CLHEP::cm;     
+    G4double x = myGauss->fire(myGeom->GetXBeamPosition(), myGeom->GetXBeamSigma());
+    G4double y = myGauss->fire(myGeom->GetYBeamPosition(), myGeom->GetYBeamSigma());
+    G4double z = myGeom->GetZBeamPosition();     
     G4double t = myGauss->fire(0.0, myGeom->GetTBeamSigma()) * CLHEP::ns; //cuidado con las unidades
 
     G4ThreeVector pos, dir;
