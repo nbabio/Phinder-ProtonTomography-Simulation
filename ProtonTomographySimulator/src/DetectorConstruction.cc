@@ -8,6 +8,8 @@
 #include "G4Element.hh"
 #include "G4MaterialTable.hh"
 #include "G4NistManager.hh"
+#include "G4MaterialPropertiesTable.hh"
+#include "G4SystemOfUnits.hh"
 
 #include "G4VSolid.hh"
 #include "G4Box.hh"
@@ -116,6 +118,36 @@ void DetectorConstruction::ConstructMaterials() {
     materials.insert(std::pair<G4String, G4Material *>("fat", man->FindOrBuildMaterial("G4_ADIPOSE_TISSUE_ICRP")));
     materials.insert(std::pair<G4String, G4Material *>("brain", man->FindOrBuildMaterial("G4_BRAIN_ICRP")));
 
+    // Add the optical properties to the materials already defined in G4
+    // Define a vector of energies in eV corresponding to the wavelengths of interest for optical properties: 500, 460, 435, 400, 380 nm (E = 1239.84/λ)
+    std::vector<G4double> E = {2.48*eV, 2.70*eV, 2.85*eV, 3.10*eV, 5.0*eV};
+
+    // OPTICAL PROPERTIES MUST BE CHANGED DEPENDING ON THE FIBER MATERIALS! (Sería buena idea ponerlo en el archivo de configuración?)
+
+    // Core: Scintillating polystyrene
+    G4Material* core = man->FindOrBuildMaterial("G4_POLYSTYRENE");
+    auto* coreMPT = new G4MaterialPropertiesTable();
+    coreMPT->AddProperty("RINDEX",                  E, {1.59, 1.59, 1.59, 1.59, 1.59}); // Refractive index of the core material is constant for all energies
+    coreMPT->AddProperty("ABSLENGTH",               E, {3.5*m, 3.5*m, 3.0*m, 1.0*m, 0.5*m});
+    coreMPT->AddProperty("SCINTILLATIONCOMPONENT1", E, {0.10, 0.60, 1.00, 0.40, 0.05}); // Emission spectrum of the scintillator (normalized to 1)
+    coreMPT->AddConstProperty("SCINTILLATIONYIELD",         1000./MeV);  // Number of photons per MeV deposited; The real one is 8000; low for testing
+    coreMPT->AddConstProperty("RESOLUTIONSCALE",            1.0); // Controls the intrinsic dispersion/variance in photon production (var = R * mean); 1.0 = Poisson statistics; 0.0 = no variance; 
+    coreMPT->AddConstProperty("SCINTILLATIONTIMECONSTANT1", 3.2*ns); // Scintillating time decay constant
+    core->SetMaterialPropertiesTable(coreMPT); 
+    core->GetIonisation()->SetBirksConstant(0.126*mm/MeV); // Light yield per path length as a function of the energy loss per path length for a particle traversing a scintillator
+    materials.insert(std::pair<G4String, G4Material *>("scint_core", core));
+
+    // Cladding: PMMA (plexiglass) (Not scintillating; refractive index lower than the core to ensure total internal reflection)
+    G4Material* clad = man->FindOrBuildMaterial("G4_PLEXIGLASS");
+    auto* cladMPT = new G4MaterialPropertiesTable();
+    cladMPT->AddProperty("RINDEX", E, {1.49, 1.49, 1.49, 1.49, 1.49});
+    clad->SetMaterialPropertiesTable(cladMPT);
+    materials.insert(std::pair<G4String, G4Material *>("scint_clad", clad));
+
+    // Air with RINDEX=1 so that light can exit the fiber without dying at the boundary. Add the optical properties of air
+    auto* airMPT = new G4MaterialPropertiesTable();
+    airMPT->AddProperty("RINDEX", E, {1.0, 1.0, 1.0, 1.0, 1.0});
+    materials["air"]->SetMaterialPropertiesTable(airMPT);
 }
 //----------------------------------------------------------------------//
 //----------------------------------------------------------------------//

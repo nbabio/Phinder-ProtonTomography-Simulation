@@ -11,6 +11,7 @@
 #include "G4ios.hh"
 #include "CLHEP/Random/RandGaussQ.h"
 #include "CLHEP/Random/RandFlat.h"
+#include "G4OpticalPhoton.hh"
 
 #include <tuple>
 
@@ -55,6 +56,9 @@ void FiberSensor::Initialize(G4HCofThisEvent*HCE)
 // Process the hits and fills the relevant information                  //
 //----------------------------------------------------------------------//
 G4bool FiberSensor::ProcessHits(G4Step*aStep,G4TouchableHistory*  /*ROhist*/) {
+
+    // Optical photons are simulated, but not stored as hits.
+    if(aStep->GetTrack()->GetDefinition() == G4OpticalPhoton::Definition()) return false;
 
     G4Event *event = G4EventManager::GetEventManager()->GetEventManager()->GetNonconstCurrentEvent();
     if(event == NULL) false;

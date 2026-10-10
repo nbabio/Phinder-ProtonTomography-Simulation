@@ -24,6 +24,8 @@
 #include "G4RadioactiveDecayPhysics.hh"
 #include "G4IonBinaryCascadePhysics.hh"
 
+#include "G4OpticalPhysics.hh"
+
 
 //https://ceiden.com/wp-content/uploads/2022/06/011-EMendoza_Protontherapy_WPE_v01.pdf
 //----------------------------------------------------------------------//
@@ -40,7 +42,7 @@ MyPhysicsList::MyPhysicsList() : G4VModularPhysicsList() {
 	RegisterPhysics( new G4IonPhysics );
 	RegisterPhysics( new G4NeutronTrackingCut );     
 	RegisterPhysics( new G4RadioactiveDecayPhysics);  
-
+	RegisterPhysics( new G4OpticalPhysics );
 
 }
 //----------------------------------------------------------------------//

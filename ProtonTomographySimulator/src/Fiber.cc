@@ -3,6 +3,11 @@
 #include "Fiber.hh"
 #include "FiberSensor.hh"
 #include "G4VisAttributes.hh"
+#include "G4OpticalSurface.hh"
+#include "G4LogicalSkinSurface.hh"
+#include "G4MaterialPropertiesTable.hh"
+#include "G4SystemOfUnits.hh"
+
 
 //----------------------------------------------------------------------//
 // Constructor                                                          //
@@ -112,8 +117,32 @@ void Fiber::createG4Objects(G4String name, G4LogicalVolume *mother,
                                        logicalVolumeCladding, FiberCladdingPhysicalName,
                                        mother, false, 0, true);                   
     
+    // Absorbing jacket (black coating) around the cladding / Defininng the volume
+    G4double jacketThickness = 0.01*CLHEP::cm;
+    G4String FiberNameJacket = G4String("FiberJacket_") + name;
+    G4Tubs *solidVolumeJacket = new G4Tubs(FiberNameJacket, claddingRad, claddingRad + jacketThickness, length, 0.0, 2.0*CLHEP::pi);
+    G4LogicalVolume *logicalVolumeJacket = new G4LogicalVolume(solidVolumeJacket, materials["carbon"], FiberNameJacket); // carbon is used as a black coating material
+    G4String FiberJacketPhysicalName = G4String("FiberJacketPhys_") + name;
+    new G4PVPlacement(getRot(), getPos(), logicalVolumeJacket, FiberJacketPhysicalName,
+                      mother, false, 0, true);
 
-    //We need to make this object sensitive
+    // Optical surface of the jacket: every optical photon reaching it is absorbed / Defining the optical surface
+    static G4OpticalSurface *blackSurface = nullptr;
+    if(blackSurface == nullptr) {
+        blackSurface = new G4OpticalSurface("FiberBlackSurface");
+        blackSurface->SetType(dielectric_metal);
+        blackSurface->SetModel(unified);
+        blackSurface->SetFinish(polished);
+        std::vector<G4double> energies = {2.48*eV, 3.26*eV};
+        std::vector<G4double> reflectivity = {0.0, 0.0};
+        G4MaterialPropertiesTable *blackMPT = new G4MaterialPropertiesTable();
+        blackMPT->AddProperty("REFLECTIVITY", energies, reflectivity);
+        blackSurface->SetMaterialPropertiesTable(blackMPT);
+    }
+    new G4LogicalSkinSurface(G4String("FiberJacketSkin_") + name, logicalVolumeJacket, blackSurface);
+
+
+    // We need to make the fiber sensitive
     G4String SDname = G4String("FiberSensor") + name;
     G4String Collection = G4String("HitsCollection_") + name;
     FiberSensor *fiberSensor = new FiberSensor(SDname = SDname, Collection);
