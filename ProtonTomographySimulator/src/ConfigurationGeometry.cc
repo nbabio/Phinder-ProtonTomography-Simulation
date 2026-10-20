@@ -106,6 +106,8 @@ ConfigurationGeometry::ConfigurationGeometry(G4String file) {
 
         //Definition of the Detectors ----------------------------------------------
         const Json::Value Detectors = root["Detectors"];
+        //Global layer index (not reset between detectors): follows the order in the json file
+        G4int globalLayer = 0;
 
 	    for(G4int idet = 0; idet < Detectors.size(); ++idet) {
 
@@ -142,7 +144,7 @@ ConfigurationGeometry::ConfigurationGeometry(G4String file) {
                 G4double zSizeLayer_ = atof(root["Detectors"][idet]["Layers"][icoll]["zSizeLayer"].asString().c_str()) * CLHEP::cm;
 	            Layer *layer = new Layer(xPosLayer, yPosLayer, zPosLayer, 
                                         xDirLayer, yDirLayer, zDirLayer, 
-                                        xSizeLayer_, ySizeLayer_, zSizeLayer_, idet, icoll);
+                                        xSizeLayer_, ySizeLayer_, zSizeLayer_, idet, globalLayer);
                 //Fibers inside a layer ----------------------------------------------
 	            const Json::Value Sensors = root["Detectors"][idet]["Layers"][icoll]["Fibers"];
                 for(G4int isens = 0; isens < Sensors.size(); ++isens) {
@@ -164,7 +166,7 @@ ConfigurationGeometry::ConfigurationGeometry(G4String file) {
                     Fiber *fiber = new Fiber(xSensPos, ySensPos, zSensPos, 
                                              xSensDir, ySensDir, zSensDir,
                                              xSensSize, ySensSize, zSensSize,
-                                             idet, icoll, isens,
+                                             idet, globalLayer, isens,
                                              coreRad, claddingRad, length,
                                             coreMaterial, claddingMaterial);
                     layer->AddSensor(fiber);
@@ -175,6 +177,7 @@ ConfigurationGeometry::ConfigurationGeometry(G4String file) {
                     registerCollection(Coll);
 		        }   
                 detector->AddLayer(layer);
+                globalLayer++;
 	        }
             detectors.push_back(detector);	    
         }
@@ -444,7 +447,7 @@ void ConfigurationGeometry::createG4objects(G4LogicalVolume *mother,
     G4ThreeVector newpos = *rot * pos;
 
     coneVolume = new G4Cons("gantry", 0.5*CLHEP::cm, 1.0*CLHEP::cm, 3.0*CLHEP::cm, 3.5*CLHEP::cm, 5.0*CLHEP::cm, 0.0, 2.0*3.14159287);
-    conelogicalVolume = new G4LogicalVolume(coneVolume, materials["steel"], "gantrylogical");
+    conelogicalVolume = new G4LogicalVolume(coneVolume, materials["air"], "gantrylogical");
     conePhysical = new G4PVPlacement(rot, newpos, conelogicalVolume, "gantryphysical", mother, false, 0, true);
 
     G4Colour silicon(238.0/256.0, 162.0/256.0, 11.0/256.0);

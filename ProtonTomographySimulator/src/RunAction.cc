@@ -42,6 +42,9 @@ void RunAction::BeginOfRunAction(const G4Run* run) {
     man->CreateNtupleIColumn("layer");
     man->CreateNtupleIColumn("fiber");
     man->CreateNtupleDColumn("energy");
+    man->CreateNtupleDColumn("kineticEnergy");
+    man->CreateNtupleDColumn("stepLength");
+    man->CreateNtupleDColumn("time");
     man->CreateNtupleDColumn("localx");
     man->CreateNtupleDColumn("localy");
     man->CreateNtupleDColumn("localz");

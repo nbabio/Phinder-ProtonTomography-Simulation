@@ -50,6 +50,8 @@ target_link_libraries(Generator ${Geant4_LIBRARIES} ${JSONCPP_LIB})
 # relies on these scripts being in the current working directory.
 #
 set(TheWorldFunction_SCRIPTS
+  init_vis.mac
+  vis.mac
   )
 
 foreach(_script ${TheWorldFunction_SCRIPTS})

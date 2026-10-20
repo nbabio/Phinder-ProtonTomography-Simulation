@@ -253,7 +253,7 @@ void showBanner() {
            << "| )      | )   ( |___) (___| )  \\  || (__/  )| (____/\\| ) \\ \\__" << G4endl
            << "|/       |/     \\|\\_______/|/    )_)(______/ (_______/|/   \\__/" << G4endl
            << "                                                                " << G4endl
-           << "Proton tomography simulator (IFCA)                               " << G4endl
+           << "Scintillatiing proton tomography simulator (IFCA)                               " << G4endl
            << "\033[0m" << G4endl;
 }
 //----------------------------------------------------------------------//

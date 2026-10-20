@@ -104,14 +104,17 @@ void EventAction::EndOfEventAction(const G4Event* evt) {
                     man->FillNtupleIColumn(2, aHit->GetLayerID());
                     man->FillNtupleIColumn(3, aHit->GetFiberID());
                     man->FillNtupleDColumn(4, aHit->GetEnergy()/CLHEP::MeV);
-                    man->FillNtupleDColumn(5, aHit->GetLocalPos().x()/CLHEP::cm);
-                    man->FillNtupleDColumn(6, aHit->GetLocalPos().y()/CLHEP::cm);                       
-                    man->FillNtupleDColumn(7, aHit->GetLocalPos().z()/CLHEP::cm);
-                    man->FillNtupleDColumn(8, aHit->GetGlobalPos().x()/CLHEP::cm);
-                    man->FillNtupleDColumn(9, aHit->GetGlobalPos().y()/CLHEP::cm);                       
-                    man->FillNtupleDColumn(10, aHit->GetGlobalPos().z()/CLHEP::cm);
-                    man->FillNtupleIColumn(11, aHit->GetGenID());
-                    man->FillNtupleIColumn(12, aHit->GetGenTrackID());
+                    man->FillNtupleDColumn(5, aHit->GetGenEnergy()/CLHEP::MeV);
+                    man->FillNtupleDColumn(6, aHit->GetStepLength()/CLHEP::cm);
+                    man->FillNtupleDColumn(7, aHit->GetTime()/CLHEP::ns);
+                    man->FillNtupleDColumn(8, aHit->GetLocalPos().x()/CLHEP::cm);
+                    man->FillNtupleDColumn(9, aHit->GetLocalPos().y()/CLHEP::cm);                       
+                    man->FillNtupleDColumn(10, aHit->GetLocalPos().z()/CLHEP::cm);
+                    man->FillNtupleDColumn(11, aHit->GetGlobalPos().x()/CLHEP::cm);
+                    man->FillNtupleDColumn(12, aHit->GetGlobalPos().y()/CLHEP::cm);                       
+                    man->FillNtupleDColumn(13, aHit->GetGlobalPos().z()/CLHEP::cm);
+                    man->FillNtupleIColumn(14, aHit->GetGenID());
+                    man->FillNtupleIColumn(15, aHit->GetGenTrackID());
                     man->AddNtupleRow(); 
                 }
             }

@@ -73,8 +73,8 @@ if __name__=='__main__':
         theDet['ySizeDetector'] = 80.0
         theDet['zSizeDetector'] = 15.0
         theLayers = []
-        zLayerPos = [-5.5, -4.5, 4.5, 5.5]
-        zDirLayer = [0.0, 90.0, 0.0, 90.0]
+        zLayerPos = [5.5, 4.5, -4.5, -5.5]
+        zDirLayer = [90.0, 0.0, 90.0, 0.0]
         for i, ilayer in enumerate(zLayerPos):
             theLayer = copy.copy(layer)
             theLayer['xPosLayer'] = 0.0

@@ -39,6 +39,8 @@ private:
     G4int FiberID;
     G4double energy;
     G4double genEnergy;
+    G4double stepLength;
+    G4double time;
     G4int genID;
     G4int genTrackID;
     G4ThreeVector localPos;
@@ -81,6 +83,18 @@ public:
     }
     inline G4double GetGenEnergy() const {
         return genEnergy;
+    }
+    inline void SetStepLength(G4double l) {
+        stepLength = l;
+    }
+    inline G4double GetStepLength() const {
+        return stepLength;
+    }
+    inline void SetTime(G4double t) {
+        time = t;
+    }
+    inline G4double GetTime() const {
+        return time;
     }
     inline void SetGenID(G4int a) {
         genID = a;

@@ -51,6 +51,8 @@ FiberSensorHit::FiberSensorHit(const FiberSensorHit &right): G4VHit() {
     localPos = right.localPos;
     globalPos = right.globalPos;
     genEnergy = right.genEnergy;
+    stepLength = right.stepLength;
+    time = right.time;
     genID = right.genID; 
     genTrackID = right.genTrackID; 
 }
@@ -70,6 +72,8 @@ const FiberSensorHit& FiberSensorHit::operator=(const FiberSensorHit &right) {
     localPos = right.localPos;
     globalPos = right.globalPos;
     genEnergy = right.genEnergy;
+    stepLength = right.stepLength;
+    time = right.time;
     genID = right.genID;
     genTrackID = right.genTrackID;
     return *this;

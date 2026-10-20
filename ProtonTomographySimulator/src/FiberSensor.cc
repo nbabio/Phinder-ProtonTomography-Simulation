@@ -73,7 +73,9 @@ G4bool FiberSensor::ProcessHits(G4Step*aStep,G4TouchableHistory*  /*ROhist*/) {
     G4int sensor = fiber->fiberId();
     
     G4double energy = aStep->GetTotalEnergyDeposit();
-    G4double genEnergy = aStep->GetPreStepPoint()->GetTotalEnergy();
+    G4double genEnergy = aStep->GetPreStepPoint()->GetKineticEnergy();
+    G4double stepLength = aStep->GetStepLength();
+    G4double time = aStep->GetPreStepPoint()->GetGlobalTime();
     G4int genID = aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding();
     G4int genTrackID = aStep->GetTrack()->GetTrackID();
 
@@ -87,6 +89,8 @@ G4bool FiberSensor::ProcessHits(G4Step*aStep,G4TouchableHistory*  /*ROhist*/) {
     aHit->SetGlobalPos(worldPos);
     aHit->SetEnergy(energy);
     aHit->SetGenEnergy(genEnergy);
+    aHit->SetStepLength(stepLength);
+    aHit->SetTime(time);
     aHit->SetGenID(genID);
     aHit->SetGenTrackID(genTrackID);
 

@@ -1,5 +1,3 @@
-
-
 #include "Fiber.hh"
 #include "FiberSensor.hh"
 #include "G4VisAttributes.hh"
