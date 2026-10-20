@@ -109,7 +109,7 @@ if __name__=='__main__':
                 theFiber['coreRadius'] = 0.25
                 theFiber['claddingRadius'] = 0.35
                 theFiber['length'] = FiberYsize/2.0
-                theFiber['coreMaterial'] = 'scint_core'
+                theFiber['coreMaterial'] = 'EJ204'
                 theFiber['claddingMaterial'] = 'scint_clad'
                 theFibers.append(theFiber)
             theLayer['Fibers'] = theFibers
