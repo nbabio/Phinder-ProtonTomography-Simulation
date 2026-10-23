@@ -1,0 +1,34 @@
+# Build directories (CMake + Geant4) — the current one takes up 46 GB
+*-build/
+build/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+Generator
+G4History.macro
+
+# Simulation output
+*.root
+results/
+
+# Generated configurations (they can be regenerated with makeConfiguration.py)
+ProtonTomographySimulator/data/*.json
+!ProtonTomographySimulator/data/confExample.json
+
+# Plots produced by the analysis macros
+*.png
+*.pdf
+ProtonTomographySimulator/dataAnalysis/*Plots/
+
+# Python
+__pycache__/
+*.pyc
+*.npz
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
