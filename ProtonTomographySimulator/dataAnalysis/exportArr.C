@@ -115,4 +115,3 @@ void exportArr(const char* inputFile, const char* prefix, int maxEvents = 200, d
 
     printf("protons = %zu, fiber crossings = %zu,  photons = %ld\n", selectedG4Events.size(), newIndex.size(), nPhotons);
 }
-Móvil: DNI: WhatsApp: SI NO
