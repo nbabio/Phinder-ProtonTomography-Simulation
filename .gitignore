@@ -26,6 +26,11 @@ __pycache__/
 *.pyc
 *.npz
 
+# Root compilation files
+*.pcm
+*.d
+*.so
+
 # Editor / IDE
 .vscode/
 .idea/
