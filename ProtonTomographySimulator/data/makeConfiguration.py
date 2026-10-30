@@ -45,7 +45,7 @@ if __name__=='__main__':
     theBeam['tBeamSigma'] = 3.0
     #Modify phantoms directly in data
     thePhantoms = []
-    phantom['name'] = "lung"
+    phantom['name'] = "bone"
     phantom['xPos'] = 0
     phantom['yPos'] = 0
     phantom['zPos'] = 0
@@ -54,7 +54,7 @@ if __name__=='__main__':
     phantom['zDir'] = 1
     phantom['zsize'] = 10
     phantom['radius'] = 10
-    phantom['material'] = "lung"
+    phantom['material'] = "bone"
     thePhantoms.append(phantom)
     #Modify photons directly in data
     photons['killPhotons'] = False # true = Photon is stored in the stack when it is created, false = Same as true, but the photon propagates until it is absorbed. ntuple only stores the information at the time the photon is created in both cases. false may be useful if there is a detector at the end of the scintillating fibers, or to make the visualization more realistic.
@@ -69,8 +69,8 @@ if __name__=='__main__':
         theDet['xDirDetector'] = 0.0
         theDet['xDirDetector'] = 0.0
         theDet['xPosDetector'] = 0.0
-        theDet['xSizeDetector'] = 80.0
-        theDet['ySizeDetector'] = 80.0
+        theDet['xSizeDetector'] = 20.0
+        theDet['ySizeDetector'] = 20.0
         theDet['zSizeDetector'] = 15.0
         theLayers = []
         zLayerPos = [5.5, 4.5, -4.5, -5.5]
@@ -83,8 +83,8 @@ if __name__=='__main__':
             theLayer['xDirLayer'] = 0.0
             theLayer['yDirLayer'] = 0.0
             theLayer['zDirLayer'] = zDirLayer[i]
-            theLayer['xSizeLayer'] = 80.0
-            theLayer['ySizeLayer'] = 80.0
+            theLayer['xSizeLayer'] = 20.0
+            theLayer['ySizeLayer'] = 20.0
             theLayer['zSizeLayer'] = 1.0
             theFibers = []
             NFibers = 21

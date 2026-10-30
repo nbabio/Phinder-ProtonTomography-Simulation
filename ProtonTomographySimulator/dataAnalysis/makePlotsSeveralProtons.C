@@ -260,7 +260,7 @@ void plotSignalPhotonPosition(TFile *f, const char *outDir) {
 // Right: exit time relative to the first photon created in the same    //
 //        (event, det, layer) -> pulse shape without beam t0 and TOF.   //
 //----------------------------------------------------------------------//
-void plotSignalPhotonTime(TFile *f, const char *outDir) {
+void plotSignalPhotonTime(TFile *f, const char *outDir, int selDet = -1, int selLayer = -1, int selFiber = -1) { // -1 = all
 
     TTree *tc = (TTree*) f->Get("photons");
     TTree *te = (TTree*) f->Get("exitPhotons");
@@ -270,10 +270,10 @@ void plotSignalPhotonTime(TFile *f, const char *outDir) {
     auto key = [](int e, int tr) { return ((long long) e << 32) | (unsigned int) tr; };
 
     //Exit photons
-    int eEvt, eDet, eLayer, eTrack, eSide;
+    int eEvt, eDet, eLayer, eFiber, eTrack, eSide;
     double eTime, eLz;
     te->SetBranchStatus("*", 0);
-    for(auto b : {"eventNumber", "det", "layer", "trackID", "time", "localz", "side"}) te->SetBranchStatus(b, 1);
+    for(auto b : {"eventNumber", "det", "layer", "fiber", "trackID", "time", "localz", "side"}) te->SetBranchStatus(b, 1);
     te->SetBranchAddress("eventNumber", &eEvt);
     te->SetBranchAddress("det", &eDet);
     te->SetBranchAddress("layer", &eLayer);
@@ -281,6 +281,7 @@ void plotSignalPhotonTime(TFile *f, const char *outDir) {
     te->SetBranchAddress("time", &eTime);
     te->SetBranchAddress("localz", &eLz);
     te->SetBranchAddress("side", &eSide);
+    te->SetBranchAddress("fiber", &eFiber);
 
     //Created photons
     int cEvt, cDet, cLayer, cTrack;
@@ -330,6 +331,7 @@ void plotSignalPhotonTime(TFile *f, const char *outDir) {
         (eSide > 0 ? hAbsEndP : hAbsEndM)->Fill(eTime);
         double tc0 = tCreate[key(eEvt, eTrack)];
         if(tc0 < -1e29) { nUnmatched++; continue; }
+        if((selDet >= 0 && eDet != selDet) || (selLayer >= 0 && eLayer != selLayer) || (selFiber >= 0 && eFiber != selFiber)) continue;
         hTransit->Fill(eTime - tc0);
         hRel->Fill(eTime - tFirst[std::make_tuple(eEvt, eDet, eLayer)]);
     }
@@ -340,7 +342,7 @@ void plotSignalPhotonTime(TFile *f, const char *outDir) {
 
     TCanvas *c = new TCanvas("cSigTime", "Signal photons time", 2100, 700);
     c->Divide(3, 1);
-    c->cd(1); gPad->SetLogy();
+    c->cd(1); // gPad->SetLogy();
     hAbsEndP->SetMaximum(1.2*std::max(hAbsEndP->GetMaximum(), hAbsEndM->GetMaximum()));
     hAbsEndP->SetLineColor(kAzure + 2); hAbsEndP->Draw("HIST");
     hAbsEndM->SetLineColor(kOrange + 7); hAbsEndM->Draw("HIST SAME");
@@ -356,7 +358,7 @@ void plotSignalPhotonTime(TFile *f, const char *outDir) {
     hRel->SetLineColor(kAzure + 2); hRel->Draw("HIST");
 
     c->SaveAs(Form("%s/signalPhotonTime.png", outDir));
-    c->SaveAs(Form("%s/signalPhotonTime.pdf", outDir));
+    c->SaveAs(Form("%s/signalPhotonTime_d%d_l%d_f%d.pdf", outDir, selDet, selLayer, selFiber));
 }
 
 //----------------------------------------------------------------------//
@@ -581,7 +583,7 @@ void plotPhotonTransport(TFile *f, const char *outDir, double nCore = 1.59, doub
 //----------------------------------------------------------------------//
 // Main                                                                 //
 //----------------------------------------------------------------------//
-void makePlotsSeveralProtons(const char *fileName = "output.root", const char *outDir = "plots", int nEvents = 0) {
+void makePlotsSeveralProtons(const char *fileName = "output.root", const char *outDir = "plots", int nEvents = 0, int selDet = -1, int selLayer = -1, int selFiber = -1) {
 
     gStyle->SetOptStat(0);
     gStyle->SetPalette(kViridis);
@@ -591,14 +593,14 @@ void makePlotsSeveralProtons(const char *fileName = "output.root", const char *o
     if(!f || f->IsZombie()) { printf("Cannot open %s\n", fileName); return; }
 
     // Plots are added here, one call per plot
-    plotPhotonTransport(f, outDir);
-    plotPhotonCreationPosition(f, outDir);
-    plotPhotonsPerProton(f, outDir, nEvents);
-    plotEnergyPerProton(f, outDir, nEvents);
-    plotPhotonCreationTime(f, outDir, nEvents);
-    plotSignalPhotonPosition(f, outDir);
-    plotSignalPhotonTime(f, outDir); 
-    plotPhotonSpectra(f, outDir);
+    //plotPhotonTransport(f, outDir);
+    //plotPhotonCreationPosition(f, outDir);
+    //plotPhotonsPerProton(f, outDir, nEvents);
+    //plotEnergyPerProton(f, outDir, nEvents);
+    //plotPhotonCreationTime(f, outDir, nEvents);
+    //plotSignalPhotonPosition(f, outDir);
+    //plotPhotonSpectra(f, outDir);
+    plotSignalPhotonTime(f, outDir, selDet, selLayer, selFiber);
 
     f->Close();
 }
